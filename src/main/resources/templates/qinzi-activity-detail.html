@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" style="overflow:auto;height:auto;height:100%;">
+<head>
+    <meta charset="UTF-8" />
+    <title>照片详情</title>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width,viewport-fit=cover"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="format-detection" content="telephone=no, email=no"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/> 
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/my.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/swiper.min.css}"/>
+    <link rel="stylesheet" th:href="@{https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css}"/>
+	<script th:src="@{/js/zoom.js}" type="text/javascript"></script>
+	<script th:src="@{/js/jquery-1.11.1.min.js}" type="text/javascript"></script>
+	<script th:src="@{http://res.wx.qq.com/open/js/jweixin-1.2.0.js}" type="text/javascript"></script>
+	<script th:src="@{/js/swiper.min.js}"></script>
+	
+</head>
+<body class="bg-f6f6f6 x-hindden" style="padding-bottom:0;" >
+<div class="por x-hindden">
+   <header class="image-hd por">
+       <a  href="javascript:history.back(-1)"  class="return"><img th:src="@{/images/return-fill.png}" id="back"/></a>
+       <!-- <a  th:href="@{/wx/discover/getDiscoverList}"  class="return"><img th:src="@{/images/return-fill.png}" id="openshare" hidden="true" /></a> -->
+       <!-- Swiper -->
+	   <div class="swiper-container">
+	    <div class="swiper-wrapper">
+	      <div class="swiper-slide">
+	      	<img th:src="${discoverInfo.pictureUrl}" th:onclick="'javascript:previewImage(this)'"/>
+	      </div>
+	      <div class="swiper-slide">
+	      	<img th:src="${discoverInfo.simplifyPictureUrl}" th:onclick="'javascript:previewImage(this)'"/>
+	      </div>
+	    </div>
+	    <!-- Add Pagination -->
+	    <div class="swiper-pagination"></div>
+	   </div>
+	   <!-- Swiper -->
+       <!-- <img th:src="${discoverInfo.simplifyPictureUrl}"/> -->
+       <!-- <div class="hd-right por">
+           <img th:src="@{/images/share02.png}" class="share-btn" />
+       </div> -->
+   </header> 
+    <div class="pd-side bg-fff pd-bottom bd-bottom pd-top clearfix photographer-msg">
+        <div class="fl">
+            <img th:src="${discoverInfo.userHeadPicture}" class="photographer" />
+            <span th:text="${discoverInfo.nickName}" class="fz-03">某某某</span>
+        </div>
+        <div class="clearfix discuss fr img-discuss">
+        	<a th:href="@{/wx/discuss/toDiscuss(id = ${discoverInfo.id},openId = ${discoverInfo.openId})}" id="plicon" class="fr pl c-95 ">
+        		<img th:src="@{/images/discuss.png}" alt="" class="plicon"/>
+        	</a>
+            <a id="plicon" class="fr pl c-95 ">
+            	<img th:src="@{/images/share.png}" alt="" class="plicon"/><em id="shareNumber" th:text="${discoverInfo.shareNumber}" class=" fz-04 c-95">0</em>
+            </a>
+            <div class="zan-btn fr" id="zanbtn">
+	            <img src="/images/like.png" th:onclick="'javascript:toChangeLike()'" id="collectBtn" class="zanicon"/>
+            	<span th:text="${discoverInfo.likeNumber}" id="likeNumber" class="fz-04 c-95 zanicon1">0</span>
+            </div>                      
+        </div>
+    </div>
+<section class="content-area mt-02">
+    <div class="comment-area mt-02 bg-fff bd-top bd-bottom pd-side">
+        <h3 class="comment-hd height90 bd-bottom">全部评论</h3>
+        <ul class="pl-content bg-fff clearfix por" th:each="discuss : ${discoverInfo.discussInfo}">
+        	<li>
+              <div class="pl-left">
+                  <img th:src="${discuss.userHeadPicture}" alt="" />
+              </div>
+              <div class="pl-right pb-01">          
+                  <div class="clearfix pl-user">             
+                      <div class="fl">
+                        <span class="dsb c-36 fz-02" th:text="${discuss.nickName}">某某某 </span>                 
+                        <span class="dsb c-95 fz-04 pl-time" th:text="${discuss.discussTime}">4/17 14:38:35</span>
+                      </div>             
+                  </div>           
+                  <p class="txt-break c-36 fz-02" th:text="${discuss.discussContent}">评论内容</p>
+              </div>
+            </li>
+        </ul>
+        <div class="weui-panel__ft">
+             <a th:href="@{/wx/discuss/allDiscuss(id = ${discoverInfo.id})}" class="weui-cell weui-cell_access weui-cell_link">
+                 <span class="weui-cell__bd">查看更多</span>
+                 <span class="weui-cell__ft"></span>
+             </a>    
+         </div>
+    </div>
+
+</section>
+
+</div>
+
+</body>
+
+	<script th:inline="javascript" type="text/javascript">
+	
+		var pictureUploadLogsId = [[${discoverInfo.id}]];
+		var openId = [[${discoverInfo.openId}]];
+		
+		$(document).ready(function(){
+			var swiper = new Swiper('.swiper-container', {
+			      pagination: {
+			        el: '.swiper-pagination',
+			        dynamicBullets: true,
+			      },
+			    });
+			
+			
+			$.ajax({
+				url: "http://simplepicwx.tunnel.qydev.com/wx/discover/toCheckLike",
+				dataType:"json",
+				data:{
+					"openId":openId,
+					"pictureUploadLogsId":pictureUploadLogsId
+				},
+				success: function(result){
+					if(result){
+			            $("#collectBtn").attr("src","/images/like_check.png");
+			        }else{
+			            $("#collectBtn").attr("src","/images/like.png");
+			        }
+		      	}
+			});
+			
+			var appId = [[${config.appId}]];
+			var timestamp = [[${config.timestamp}]];
+			var nonceStr = [[${config.nonceStr}]];
+			var signature = [[${config.signature}]];
+			var jsApiList = [[${config.jsApiList}]];
+			
+			wx.config({
+			    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+			    appId: appId, // 必填，公众号的唯一标识
+			    timestamp: timestamp, // 必填，生成签名的时间戳
+			    nonceStr: nonceStr, // 必填，生成签名的随机串
+			    signature: signature,// 必填，签名
+			    jsApiList:jsApiList
+			});
+			
+			wx.ready(function () {
+				//分享给好友
+				wx.onMenuShareAppMessage({
+					title: '好友分享', // 分享标题
+					desc: '好友分享', // 分享描述
+					link: '', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+					imgUrl: 'http://simplepicwx.tunnel.qydev.com/2bae7c31-fa42-434e-a602-567864a87337.jpg', // 分享图标
+					success: function () {
+						$.ajax({
+							url: "http://simplepicwx.tunnel.qydev.com/wx/discover/share",
+							dataType:"json",
+							data:{
+								"pictureUploadLogsId":pictureUploadLogsId
+							},
+							success: function(result){
+								$("#shareNumber").text(result);
+					      	}
+						});
+					},
+					cancel: function () {
+					}
+				});
+				
+				
+				//分享到朋友圈
+				wx.onMenuShareTimeline({
+				    title: '朋友圈', // 分享标题
+				    link: '', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+				    imgUrl: '/images/click-add.png', // 分享图标
+				    success: function () {
+				    	$.ajax({
+							url: "http://simplepicwx.tunnel.qydev.com/wx/discover/share",
+							dataType:"json",
+							data:{
+								"pictureUploadLogsId":pictureUploadLogsId
+							},
+							success: function(result){
+								$("#shareNumber").text(result);
+					      	}
+						});
+					},
+					cancel: function () {
+					}
+				});
+				
+			});
+			
+		});
+		
+		function share(){
+			  $(".share-wrap").css("display","block");
+			  $(".cancle-share").click(function() {
+			      $(".share-wrap").css("display","none");
+			  });
+			 $(".share-wrap").click(function(event) {
+			    event.stopPropagation();
+			    $(this).css("display","none");
+			});
+		}
+		
+		
+		function toChangeLike(){
+			
+			$.ajax({
+				url: "http://simplepicwx.tunnel.qydev.com/wx/discover/toChangeLike",
+				dataType:"json",
+				data:{
+					"openId":openId,
+					"pictureUploadLogsId":pictureUploadLogsId
+				},
+				success: function(result){
+					$("#likeNumber").text(result);
+					if($("#collectBtn").attr("src") === "/images/like.png"){
+			            $("#collectBtn").attr("src","/images/like_check.png");
+			        }else{
+			            $("#collectBtn").attr("src","/images/like.png");
+			        }
+		      	}
+			});
+		}
+		
+		
+		//预览图片
+		function previewImage(obj){
+			var current = obj.src;
+			var urls = [];
+			urls.push([[${discoverInfo.pictureUrl}]]);
+			urls.push([[${discoverInfo.simplifyPictureUrl}]]);
+			wx.previewImage({
+				current: current, // 当前显示图片的http链接
+				urls: urls // 需要预览的图片http链接列表
+			});
+		}
+		
+	</script>
+</html>
+

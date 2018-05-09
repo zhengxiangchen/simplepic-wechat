@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+    <meta charset="UTF-8" />
+    <title>上传记录</title>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width,viewport-fit=cover"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="format-detection" content="telephone=no, email=no"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/> 
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/my.css}" />
+	<link th:href="@{/css/main.css}" type="text/css" rel="stylesheet" />
+	<script th:src="@{/js/zoom.js}" type="text/javascript"></script>
+	</head>
+	<body>
+    <div class="container"> 
+        <div class="photo-list ">
+            <aside class="fall-box grid">
+                <div class="grid-item item" th:each="discover : ${historyList}">
+                    <a th:href="@{/wx/discover/getDiscoverInfo(id = ${discover.id})}" class="dsb">
+                        <img th:src="${discover.pictureUrl}" class="item-img" />
+                        <section class="section-p">
+                           <img th:src="${discover.avatarUrl}" class="index-user-headimg"/><p class="name" th:text="${discover.nickName}">某某某</p>
+                           <div class="count-wrap">
+                                <span class="comment" th:text="${discover.shareNumber}">0</span>
+						   		<span class="praise" th:text="${discover.likeNumber}">0</span>
+                           </div>
+                        </section>
+                    </a>
+                </div><!--item end-->
+            </aside>
+            <!-- <a href="javascript:;" class="more-a">
+                <img src="/images/ic_loading.gif" />
+            </a> -->
+        </div>
+
+        <!-- 没有上传记录 -->
+        <div id="no-upload-record" class="no-upload-record" th:hidden="${!#arrays.isEmpty(historyList)}">
+            <img th:src="@{/images/no-record.png}" alt="" class="no-record dsb" />
+            <a th:href="@{/wx/photo/toUpload}" class="upload-btn dsb"><img th:src="@{/images/upload-btn02.png}"/></a>
+        </div>
+
+    </div>
+        <script th:src="@{/js/jquery-1.11.1.min.js}" type="text/javascript"></script>
+        <script th:src="@{/js/imagesloaded.pkgd.min.js}"></script>
+        <script th:src="@{/js/masonry.pkgd.min.js}"></script>
+        <script th:src="@{/js/history.js}"></script>
+        
+	</body>
+</html>

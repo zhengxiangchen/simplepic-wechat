@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--启动项设置为 trace，加载 springboot 启动内部各种详细输出-->
+<Configuration status="INFO">
+    <Appenders>
+        <!--添加一个控制台追加器-->
+        <Console name="console" target="SYSTEM_OUT">
+	      <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}][%p][%class.%method() %L] : %m%n"/>
+	    </Console>
+        <RollingFile name="logfile" fileName="D://simplepic_public/jar-logs/app.log" filePattern="D://simplepic_public/jar-logs/%d{yyyy-MM-dd-HH}.log">
+	    	<PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss}][%p][%class.%method() %L] : %m%n"/>
+	      	<Policies>  
+	        	<TimeBasedTriggeringPolicy interval="1" modulate="true"/> 
+	        </Policies> 
+    	</RollingFile>
+    </Appenders>
+    <Loggers>
+      <Root level="info">
+      <AppenderRef ref="console"/>
+      <AppenderRef ref="logfile"/>
+    </Root>
+    </Loggers>
+</Configuration>
