@@ -24,7 +24,6 @@
 <div class="por x-hindden">
    <header class="image-hd por">
        <a  href="javascript:history.back(-1)"  class="return"><img th:src="@{/images/return-fill.png}" id="back"/></a>
-       <!-- <a  th:href="@{/wx/discover/getDiscoverList}"  class="return"><img th:src="@{/images/return-fill.png}" id="openshare" hidden="true" /></a> -->
        <!-- Swiper -->
 	   <div class="swiper-container">
 	    <div class="swiper-wrapper">
@@ -39,10 +38,6 @@
 	    <div class="swiper-pagination"></div>
 	   </div>
 	   <!-- Swiper -->
-       <!-- <img th:src="${discoverInfo.simplifyPictureUrl}"/> -->
-       <!-- <div class="hd-right por">
-           <img th:src="@{/images/share02.png}" class="share-btn" />
-       </div> -->
    </header> 
     <div class="pd-side bg-fff pd-bottom bd-bottom pd-top clearfix photographer-msg">
         <div class="fl">
@@ -81,7 +76,7 @@
               </div>
             </li>
         </ul>
-        <div class="weui-panel__ft">
+        <div class="weui-panel__ft" th:if="${#lists.size(discoverInfo.discussInfo) ge 5}">
              <a th:href="@{/wx/discuss/allDiscuss(id = ${discoverInfo.id})}" class="weui-cell weui-cell_access weui-cell_link">
                  <span class="weui-cell__bd">查看更多</span>
                  <span class="weui-cell__ft"></span>
@@ -96,7 +91,7 @@
 </body>
 
 	<script th:inline="javascript" type="text/javascript">
-	
+		
 		var pictureUploadLogsId = [[${discoverInfo.id}]];
 		var openId = [[${discoverInfo.openId}]];
 		
@@ -132,7 +127,7 @@
 			var jsApiList = [[${config.jsApiList}]];
 			
 			wx.config({
-			    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+			    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
 			    appId: appId, // 必填，公众号的唯一标识
 			    timestamp: timestamp, // 必填，生成签名的时间戳
 			    nonceStr: nonceStr, // 必填，生成签名的随机串
@@ -188,18 +183,6 @@
 			});
 			
 		});
-		
-		function share(){
-			  $(".share-wrap").css("display","block");
-			  $(".cancle-share").click(function() {
-			      $(".share-wrap").css("display","none");
-			  });
-			 $(".share-wrap").click(function(event) {
-			    event.stopPropagation();
-			    $(this).css("display","none");
-			});
-		}
-		
 		
 		function toChangeLike(){
 			

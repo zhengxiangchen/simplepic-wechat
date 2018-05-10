@@ -12,8 +12,8 @@
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
     <link rel="stylesheet" type="text/css" href="/css/my.css" />
 	<link href="/css/main.css" type="text/css" rel="stylesheet" />
+	<link rel="stylesheet" th:href="@{https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css}"/>
 	<script src="/js/zoom.js" type="text/javascript"></script>
-	
 	<script th:src="@{http://res.wx.qq.com/open/js/jweixin-1.2.0.js}" type="text/javascript"></script>
 	
 	</head>
@@ -29,7 +29,7 @@
 			<img src="/images/click-add.png" alt="" class="add-photo-btn" id="add-photo"/>
 		</a>
 		<p class="fz-03 c-666 txt-center" id="txt-center">点击图标添加照片</p>
-		<div id="login_click" hidden="true">  
+		<div id="login_click" hidden="true">
         	<a id="btlogin" th:onclick="'javascript:uploadImg()'">简化图片</a>
         </div>
 	</div>
@@ -40,7 +40,27 @@
 		<a th:href="@{/wx/discover/getDiscoverList}" class="photo-index"><img src="/images/index-line.png" class="dsb" />首页</a>
 		<a href="javascript:;" class="tianjia-btn"><img src="/images/tianjia.png" /></a>
 		<a th:href="@{/wx/my/my}" class="my-photo"><img src="/images/my.png" class="dsb" />我的</a>
-	</div>	
+	</div>
+	
+	<!--BEGIN toast-->
+    <div id="toast" style="display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+            <p class="weui-toast__content">上传成功</p>
+        </div>
+    </div>
+    <!--end toast-->
+
+    <!-- loading toast -->
+    <div id="loadingToast" style="display:none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-loading weui-icon_toast"></i>
+            <p class="weui-toast__content">图片上传中</p>
+        </div>
+    </div>
+    <!-- loading toast -->
         <script th:src="@{/js/jquery-1.11.1.min.js}" type="text/javascript"></script>
         
         <script th:inline="javascript" type="text/javascript">
@@ -55,7 +75,7 @@
 				var jsApiList = [[${config.jsApiList}]];
 				
 				wx.config({
-				    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
 				    appId: appId, // 必填，公众号的唯一标识
 				    timestamp: timestamp, // 必填，生成签名的时间戳
 				    nonceStr: nonceStr, // 必填，生成签名的随机串
@@ -84,15 +104,15 @@
 				});
 			}
 			
-			
-			
 			function uploadImg(){
-				alert(img_localId);
+				var $loadingToast = $('#loadingToast');
+	            if ($loadingToast.css('display') != 'none') return;
+	            $loadingToast.fadeIn(100);
+	            
 				wx.uploadImage({
 					localId: img_localId.toString(), // 需要上传的图片的本地ID，由chooseImage接口获得
-					isShowProgressTips: 1, // 默认为1，显示进度提示
+					isShowProgressTips: 0, // 默认为1，显示进度提示
 					success: function (res) {
-						alert("点击了111");
 						img_serverId = res.serverId; // 返回图片的服务器端ID
 						$.ajax({
 							url: "http://simplepicwx.tunnel.qydev.com/wx/photo/downloadPicture",
@@ -101,7 +121,15 @@
 								"img_serverId":img_serverId
 							},
 							success: function(result){
-								alert(result);
+								$loadingToast.fadeOut(100);
+								var $toast = $('#toast');
+					            if ($toast.css('display') != 'none') return;
+
+					            $toast.fadeIn(100);
+					            setTimeout(function () {
+					                $toast.fadeOut(100);
+					                window.location.href=document.referrer;//返回上一级并刷新
+					            }, 2000);
 					      	}
 						});
 					}

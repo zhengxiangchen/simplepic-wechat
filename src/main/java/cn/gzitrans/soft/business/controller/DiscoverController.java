@@ -196,8 +196,7 @@ public class DiscoverController {
 		//去获取对接微信js的配置信息
 		//获得调用js的url地址：http://simplepicwx.tunnel.qydev.com/wx/discover/getDiscoverInfo?id=12
 		StringBuffer url = new StringBuffer();
-		url.append(urlPath);
-		url.append(request.getRequestURI());
+		url.append(request.getRequestURL());
 		url.append("?id=");
 		url.append(discoverInfo.getId());
 		WxJsConfig config =  wxJsTicketManager.getWxJsConfig(url.toString(), WxJsApi.previewImage, WxJsApi.onMenuShareAppMessage, WxJsApi.onMenuShareTimeline);
