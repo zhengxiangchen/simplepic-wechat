@@ -4,6 +4,9 @@ package cn.gzitrans.soft.business.controller;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mxixm.fastboot.weixin.module.js.WxJsApi;
 import com.mxixm.fastboot.weixin.module.js.WxJsConfig;
 import com.mxixm.fastboot.weixin.support.WxJsTicketManager;
+import com.mxixm.fastboot.weixin.util.WxWebUtils;
+import com.mxixm.fastboot.weixin.web.WxWebUser;
 
 import cn.gzitrans.soft.business.entity.DiscoverEntity;
 import cn.gzitrans.soft.business.entity.DiscoverInfoEntity;
@@ -84,7 +89,10 @@ public class DiscoverController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getDiscoverList")
-	public String getDiscoverList(ModelMap modelMap){
+	public String getDiscoverList(HttpServletRequest request, ModelMap modelMap){
+		
+		WxWebUser wxUser = WxWebUtils.getWxWebUserFromSession();
+		System.out.println(wxUser.getOpenId());
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
@@ -106,7 +114,28 @@ public class DiscoverController {
 			returnList.add(discover);
 		}
 		
+		
+		//去获取对接微信js的配置信息
+		//获得调用js的url地址：http://simplepicwx.tunnel.qydev.com/wx/discover/getDiscoverInfo?id=12
+		StringBuffer url = new StringBuffer();
+		url.append(request.getRequestURL());
+		if(!request.getParameterMap().isEmpty()){
+			url.append("?");
+		}
+		StringBuffer endUrl = new StringBuffer();
+		for (Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
+			if(endUrl.length() > 0){
+				endUrl.append("&");
+			}
+			endUrl.append(entry.getKey());
+			endUrl.append("=");
+			endUrl.append(entry.getValue()[0]);
+		}
+		url.append(endUrl.toString());
+		WxJsConfig config =  wxJsTicketManager.getWxJsConfig(url.toString(), WxJsApi.onMenuShareAppMessage, WxJsApi.onMenuShareTimeline);
+		
 		modelMap.put("discoverList", returnList);
+		modelMap.put("config", config);
 		
 		return "qinzi-activity-index";
 	}

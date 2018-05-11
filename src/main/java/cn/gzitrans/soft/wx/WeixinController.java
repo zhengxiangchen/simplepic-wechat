@@ -17,6 +17,7 @@ import cn.gzitrans.soft.business.entity.UserLoginLogsEntity;
 import cn.gzitrans.soft.business.entity.WxUserEntity;
 import cn.gzitrans.soft.business.service.UserLoginLogsService;
 import cn.gzitrans.soft.business.service.WxUserService;
+import cn.gzitrans.soft.utils.EmojiFilter;
 
 
 @WxApplication(menuAutoCreate = true)
@@ -44,7 +45,7 @@ public class WeixinController {
     		WxUserEntity userEntity = new WxUserEntity();
         	userEntity.setSubscribe(wxUser.getSubscribe());
         	userEntity.setOpenId(wxUser.getOpenId());
-        	userEntity.setNickName(wxUser.getNickName());
+        	userEntity.setNickName(EmojiFilter.filterEmoji(wxUser.getNickName()));
         	userEntity.setSex(wxUser.getSex());
         	userEntity.setCity(wxUser.getCity());
         	userEntity.setCountry(wxUser.getCountry());
@@ -58,7 +59,7 @@ public class WeixinController {
         	wxUserService.save(userEntity);
     	}else{
     		entity.setSubscribe(1);
-    		entity.setNickName(wxUser.getNickName());
+    		entity.setNickName(EmojiFilter.filterEmoji(wxUser.getNickName()));
     		entity.setSex(wxUser.getSex());
     		entity.setCity(wxUser.getCity());
     		entity.setCountry(wxUser.getCountry());

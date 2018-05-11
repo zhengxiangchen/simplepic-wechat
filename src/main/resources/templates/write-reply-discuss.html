@@ -63,6 +63,15 @@
             <p class="weui-toast__content">无回复内容</p>
         </div>
     </div>
+    
+    <!-- loading toast -->
+    <div id="uploading" style="display:none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-loading weui-icon_toast"></i>
+            <p class="weui-toast__content">正在发送</p>
+        </div>
+    </div>
 </body>
 
 	<script th:inline="javascript" type="text/javascript">
@@ -80,6 +89,10 @@
 	            }, 2000);
 		       	return;
 			}
+			
+			var $uploading = $('#uploading');
+            $uploading.fadeIn(100);
+			
 			$.ajax({
 				url: "http://simplepicwx.tunnel.qydev.com/wx/replyDiscuss/receiveReply",
 				dataType:"text",
@@ -88,6 +101,7 @@
 					"replyContent":content
 				},
 				success: function(result){
+					$uploading.fadeOut(100);
 			        var $toast = $('#toast');
 		            if ($toast.css('display') != 'none') return;
 
