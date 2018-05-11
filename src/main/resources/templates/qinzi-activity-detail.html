@@ -69,19 +69,31 @@
                   <div class="clearfix pl-user">             
                       <div class="fl">
                         <span class="dsb c-36 fz-02" th:text="${discuss.nickName}">某某某 </span>                 
-                        <span class="dsb c-95 fz-04 pl-time" th:text="${discuss.discussTime}">4/17 14:38:35</span>
-                      </div>             
+                        <span class="dsb c-95 fz-04 pl-time" th:text="${discuss.discussTime}">时间</span>
+                      </div>
+                      <div class="clearfix fr">                 
+                          <a  th:href="@{/wx/replyDiscuss/toReplyDiscuss(discussId = ${discuss.id})}" class="fr pl c-95">
+                              <em class="em58 fz-04 c-95">回复</em>
+                          </a>
+                      </div>
                   </div>           
                   <p class="txt-break c-36 fz-02" th:text="${discuss.discussContent}">评论内容</p>
+                  <ul class="reply-comment bg-f6f6f6" th:if="${discuss.replyMessage != null}">                   
+                      <li class="fz-03">                 
+                            <span class="dsb c-36 fz-03 pl-user" th:text="${discuss.replyMessage.replyUserName} + ':'">回复者微信名</span> 
+                            <p class="txt-break c-36" th:text="${discuss.replyMessage.replyContent}">回复信息</p>
+                      </li>
+                      <a th:href="@{/wx/replyDiscuss/getAllReply(discussId = ${discuss.id})}" th:if="${discuss.replyMessage.replyCount > 1}" class="more-reply fz-03" th:text="'共' + ${discuss.replyMessage.replyCount} + '条回复>>'"></a>
+                  </ul>
               </div>
             </li>
         </ul>
-        <div class="weui-panel__ft" th:if="${#lists.size(discoverInfo.discussInfo) ge 5}">
+        <!-- <div class="weui-panel__ft" th:if="${#lists.size(discoverInfo.discussInfo) ge 5}">
              <a th:href="@{/wx/discuss/allDiscuss(id = ${discoverInfo.id})}" class="weui-cell weui-cell_access weui-cell_link">
                  <span class="weui-cell__bd">查看更多</span>
                  <span class="weui-cell__ft"></span>
              </a>    
-         </div>
+         </div> -->
     </div>
 
 </section>
@@ -96,13 +108,13 @@
 		var openId = [[${discoverInfo.openId}]];
 		
 		$(document).ready(function(){
+			
 			var swiper = new Swiper('.swiper-container', {
 			      pagination: {
 			        el: '.swiper-pagination',
 			        dynamicBullets: true,
 			      },
 			    });
-			
 			
 			$.ajax({
 				url: "http://simplepicwx.tunnel.qydev.com/wx/discover/toCheckLike",
@@ -127,7 +139,7 @@
 			var jsApiList = [[${config.jsApiList}]];
 			
 			wx.config({
-			    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+			    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
 			    appId: appId, // 必填，公众号的唯一标识
 			    timestamp: timestamp, // 必填，生成签名的时间戳
 			    nonceStr: nonceStr, // 必填，生成签名的随机串

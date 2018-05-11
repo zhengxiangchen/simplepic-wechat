@@ -11,6 +11,8 @@ public class DiscussInfoEntity {
 	private String discussContent;//评论内容
 	
 	private String discussTime;//评论时间
+	
+	private ReplyMessageEntity replyMessage;//评论下方显示的内容（一条回复信息 + 总回复条数）
 
 	public Long getId() {
 		return id;
@@ -52,6 +54,14 @@ public class DiscussInfoEntity {
 		this.discussTime = discussTime;
 	}
 	
+	public ReplyMessageEntity getReplyMessage() {
+		return replyMessage;
+	}
+
+	public void setReplyMessage(ReplyMessageEntity replyMessage) {
+		this.replyMessage = replyMessage;
+	}
+
 	public String toString(){
 		StringBuffer sb = new StringBuffer();
 		sb.append("[id] = ");

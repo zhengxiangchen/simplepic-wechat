@@ -61,4 +61,15 @@ public class DiscussService {
 		return discussDao.getAllListByPictureUploadLogsId(id);
 	}
 
+
+	/**
+	 * 通过Id获取评论信息
+	 * @param discussId
+	 * @return
+	 */
+	public DiscussEntity getDiscussById(Integer discussId) {
+		return discussDao.getDiscussById(Long.valueOf(discussId));
+	}
+
+
 }

@@ -25,10 +25,13 @@ import cn.gzitrans.soft.business.entity.DiscoverInfoEntity;
 import cn.gzitrans.soft.business.entity.DiscussEntity;
 import cn.gzitrans.soft.business.entity.DiscussInfoEntity;
 import cn.gzitrans.soft.business.entity.PictureUploadLogsEntity;
+import cn.gzitrans.soft.business.entity.ReplyDiscussEntity;
+import cn.gzitrans.soft.business.entity.ReplyMessageEntity;
 import cn.gzitrans.soft.business.entity.UserLikePictureLogsEntity;
 import cn.gzitrans.soft.business.entity.WxUserEntity;
 import cn.gzitrans.soft.business.service.DiscussService;
 import cn.gzitrans.soft.business.service.PictureUploadLogsService;
+import cn.gzitrans.soft.business.service.ReplyDiscussService;
 import cn.gzitrans.soft.business.service.UserLikePictureLogsService;
 import cn.gzitrans.soft.business.service.WxUserService;
 
@@ -52,6 +55,9 @@ public class DiscoverController {
 	
 	@Autowired
     private WxJsTicketManager wxJsTicketManager;
+	
+	@Autowired
+	private ReplyDiscussService replyDiscussService;
 	
 	//第一次加载评论的数量
 	@Value("${discuss_index_count}")
@@ -171,7 +177,7 @@ public class DiscoverController {
 		discoverInfo.setNickName(user.getNickName());
 		discoverInfo.setUserHeadPicture(user.getHeadImgUrl());
 		
-		ArrayList<DiscussEntity> discussList = discussService.getListByPictureUploadLogsId(id,discuss_index_count);
+		ArrayList<DiscussEntity> discussList = discussService.getAllListByPictureUploadLogsId(id);
 		DiscussEntity discussEntity;
 		DiscussInfoEntity discussInfo;
 		ArrayList<DiscussInfoEntity> discussInfoList = new ArrayList<DiscussInfoEntity>();
@@ -188,6 +194,23 @@ public class DiscoverController {
 			
 			discussInfo.setNickName(discussUser.getNickName());
 			discussInfo.setUserHeadPicture(discussUser.getHeadImgUrl());
+			
+			//该评论回复内容的查找和设置
+			Integer replyCount = replyDiscussService.getCountByDiscussId(discussEntity.getId());
+			if(replyCount <= 0){
+				//无评论回复
+			}else{
+				//有评论回复，无论多少条，只取最后一条
+				ReplyDiscussEntity replyDiscuss = replyDiscussService.getEndReplyByDiscussId(discussEntity.getId());
+				String replyUserOpenId = replyDiscuss.getOpenId();
+				WxUserEntity replyUser = wxUserService.getByOpenId(replyUserOpenId);
+				
+				ReplyMessageEntity replyMessageEntity = new ReplyMessageEntity();
+				replyMessageEntity.setReplyContent(replyDiscuss.getReplyContent());
+				replyMessageEntity.setReplyCount(replyCount);
+				replyMessageEntity.setReplyUserName(replyUser.getNickName());
+				discussInfo.setReplyMessage(replyMessageEntity);
+			}
 			discussInfoList.add(discussInfo);
 		}
 		

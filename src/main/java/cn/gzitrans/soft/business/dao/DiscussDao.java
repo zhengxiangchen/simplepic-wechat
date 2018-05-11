@@ -21,4 +21,7 @@ public interface DiscussDao extends CrudRepository<DiscussEntity, Long> {
 	@Query(value = "select * from discuss where picture_upload_logs_id =? order by id desc", nativeQuery=true)
 	ArrayList<DiscussEntity> getAllListByPictureUploadLogsId(Integer id);
 
+	@Query(value = "from DiscussEntity where id=?")
+	DiscussEntity getDiscussById(Long valueOf);
+
 }

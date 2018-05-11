@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>全部评论</title>
+    <title>全部回复</title>
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, width=device-width"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="format-detection" content="telephone=no, email=no"/>
@@ -17,48 +17,38 @@
 <body class="bg-f6f6f6">
    <header class="common-head">
        <a  href="javascript:history.go(-1);" class="return"><img th:src="@{/images/return.png}"  alt="" /></a>
-       <h1 class="txt-center">全部评论</h1>
+       <h1 class="txt-center">全部回复</h1>
    </header> 
 <section class="mt-09">
-          <!-- <div class="original-pl pl-content  pd-side bg-fff">
+          <div class="original-pl pl-content  pd-side bg-fff">
             <li>
                 <div class="pl-left">
-                    <img src="/images/user01.png" alt="" />
+                    <img th:src="${fromUser.headImgUrl}" alt="" />
                 </div>
                 <div class="pl-right pb-01">          
                     <div class="clearfix pl-user">             
                         <div class="fl">
-                          <span class="dsb c-36 fz-02">fiona </span>                 
-                          <span class="dsb c-95 fz-04 pl-time">4/17 14:38:35</span>
+                          <span class="dsb c-36 fz-02" th:text="${fromUser.nickName}">评论者微信名</span>                 
+                          <span class="dsb c-95 fz-04 pl-time" th:text="${discuss.discussTime}">评论时间</span>
                         </div>             
-                        <div class="clearfix fr">                 
-                            <a  href="write-photo-comment.html" class="fr pl c-95">
-                                <img src="/images/comment.png" alt="" id="discuss1" class="plicon"/>
-                                <em class="em58 fz-04 c-95">11</em>
-                            </a>
-                            <span class="fr zan">
-                                <img id="plzan" class="zanicon" src="/images/zan.png" alt=""/>
-                                <em class="em58 fz-04 c-95">11</em>
-                            </span>             
-                        </div>        
                     </div>           
-                    <p class="txt-break c-36 fz-02">测试</p>           
+                    <p class="txt-break c-36 fz-02" th:text="${discuss.discussContent}">评论内容</p>           
                 </div>
             </li>
-          </div> -->
-          <ul class="pl-content pd-side mt-02">
-            <li th:each="discussInfo : ${discussInfoList}">
+          </div>
+          <ul class="pl-content pd-side mt-02" th:each="replyInfo : ${replyInfoList}">
+            <li>
                 <div class="pl-left">
-                    <img th:src="${discussInfo.userHeadPicture}"/>
+                    <img th:src="${replyInfo.replyUserImg}"/>
                 </div>
                 <div class="pl-right pb-01 bd-bottom">          
                     <div class="clearfix pl-user">             
                         <div class="fl">
-                          <span class="dsb c-36 fz-02" th:text="${discussInfo.nickName}">某某某</span>                 
-                          <span class="dsb c-95 fz-04 pl-time" th:text="${discussInfo.discussTime}">日期</span>
+                          <span class="dsb c-36 fz-02" th:text="${replyInfo.replyUserName}">回复者微信名</span>                 
+                          <span class="dsb c-95 fz-04 pl-time" th:text="${replyInfo.replyTime}">回复时间</span>
                         </div>             
                     </div>           
-                    <p class="txt-break c-36 fz-02" th:text="${discussInfo.discussContent}">内容</p>           
+                    <p class="txt-break c-36 fz-02" th:text="${replyInfo.replyContent}">回复内容</p>           
                 </div>
             </li>
           </ul>

@@ -24,7 +24,6 @@ import com.mxixm.fastboot.weixin.web.WxWebUser;
 
 import cn.gzitrans.soft.business.entity.PictureUploadLogsEntity;
 import cn.gzitrans.soft.business.service.PictureUploadLogsService;
-import cn.gzitrans.soft.utils.FileUtils;
 import net.coobird.thumbnailator.Thumbnails;
 
 @Controller
