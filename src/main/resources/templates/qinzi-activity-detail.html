@@ -106,6 +106,7 @@
 		
 		var pictureUploadLogsId = [[${discoverInfo.id}]];
 		var openId = [[${discoverInfo.openId}]];
+		var staticPath = [[${staticPath}]];
 		
 		$(document).ready(function(){
 			
@@ -117,7 +118,7 @@
 			    });
 			
 			$.ajax({
-				url: "http://simplepicwx.tunnel.qydev.com/wx/discover/toCheckLike",
+				url: staticPath + "wx/discover/toCheckLike",
 				dataType:"json",
 				data:{
 					"openId":openId,
@@ -153,10 +154,10 @@
 					title: '好友分享', // 分享标题
 					desc: '好友分享', // 分享描述
 					link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-					imgUrl: 'http://simplepicwx.tunnel.qydev.com/simplify993.18592806005425DXIcsUvtJONVV1pQqgksZlTIyABOtgJrZ3NWSLhxXC-CFmOadXxSTmwUVOwNYPa.jpg', // 分享图标
+					imgUrl: staticPath + 'simplify993.18592806005425DXIcsUvtJONVV1pQqgksZlTIyABOtgJrZ3NWSLhxXC-CFmOadXxSTmwUVOwNYPa.jpg', // 分享图标
 					success: function () {
 						$.ajax({
-							url: "http://simplepicwx.tunnel.qydev.com/wx/discover/share",
+							url: staticPath + "wx/discover/share",
 							dataType:"json",
 							data:{
 								"pictureUploadLogsId":pictureUploadLogsId
@@ -175,10 +176,10 @@
 				wx.onMenuShareTimeline({
 				    title: '朋友圈', // 分享标题
 				    link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-				    imgUrl: 'http://simplepicwx.tunnel.qydev.com/simplify993.18592806005425DXIcsUvtJONVV1pQqgksZlTIyABOtgJrZ3NWSLhxXC-CFmOadXxSTmwUVOwNYPa.jpg', // 分享图标
+				    imgUrl: staticPath + 'simplify993.18592806005425DXIcsUvtJONVV1pQqgksZlTIyABOtgJrZ3NWSLhxXC-CFmOadXxSTmwUVOwNYPa.jpg', // 分享图标
 				    success: function () {
 				    	$.ajax({
-							url: "http://simplepicwx.tunnel.qydev.com/wx/discover/share",
+							url: staticPath + "wx/discover/share",
 							dataType:"json",
 							data:{
 								"pictureUploadLogsId":pictureUploadLogsId
@@ -199,7 +200,7 @@
 		function toChangeLike(){
 			
 			$.ajax({
-				url: "http://simplepicwx.tunnel.qydev.com/wx/discover/toChangeLike",
+				url: staticPath + "wx/discover/toChangeLike",
 				dataType:"json",
 				data:{
 					"openId":openId,

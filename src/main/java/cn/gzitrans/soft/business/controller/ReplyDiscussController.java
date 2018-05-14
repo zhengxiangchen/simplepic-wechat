@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +41,10 @@ public class ReplyDiscussController {
 	private DiscussService discussService;
 	
 	
+	@Value("${static_path}")
+	private String staticPath;
+	
+	
 	/**
 	 * 跳转到回复页面
 	 * @return
@@ -53,6 +58,7 @@ public class ReplyDiscussController {
 		
 		modelMap.put("discuss", discuss);
 		modelMap.put("fromUser", fromUser);
+		modelMap.put("staticPath", staticPath);
 		
 		return "write-reply-discuss";
 	}

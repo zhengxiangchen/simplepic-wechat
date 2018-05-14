@@ -63,6 +63,7 @@ public class PhotoController {
 		WxJsConfig config =  wxJsTicketManager.getWxJsConfig(url, WxJsApi.chooseImage, WxJsApi.uploadImage);
 		
 		modelMap.put("config", config);
+		modelMap.put("staticPath", staticPath);
 		
 		return "qinzi-upload-photo";
 	}

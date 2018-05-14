@@ -4,7 +4,6 @@ package cn.gzitrans.soft.business.controller;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,8 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mxixm.fastboot.weixin.module.js.WxJsApi;
 import com.mxixm.fastboot.weixin.module.js.WxJsConfig;
 import com.mxixm.fastboot.weixin.support.WxJsTicketManager;
-import com.mxixm.fastboot.weixin.util.WxWebUtils;
-import com.mxixm.fastboot.weixin.web.WxWebUser;
 
 import cn.gzitrans.soft.business.entity.DiscoverEntity;
 import cn.gzitrans.soft.business.entity.DiscoverInfoEntity;
@@ -91,9 +88,6 @@ public class DiscoverController {
 	@RequestMapping(value = "/getDiscoverList")
 	public String getDiscoverList(HttpServletRequest request, ModelMap modelMap){
 		
-		WxWebUser wxUser = WxWebUtils.getWxWebUserFromSession();
-		System.out.println(wxUser.getOpenId());
-		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		DiscoverEntity discover;
@@ -136,6 +130,7 @@ public class DiscoverController {
 		
 		modelMap.put("discoverList", returnList);
 		modelMap.put("config", config);
+		modelMap.put("staticPath", staticPath);
 		
 		return "qinzi-activity-index";
 	}
@@ -255,6 +250,7 @@ public class DiscoverController {
 		
 		modelMap.put("discoverInfo", discoverInfo);
 		modelMap.put("config", config);
+		modelMap.put("staticPath", staticPath);
 		
 		return "qinzi-activity-detail";
 	}

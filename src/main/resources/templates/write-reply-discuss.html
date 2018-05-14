@@ -76,6 +76,7 @@
 
 	<script th:inline="javascript" type="text/javascript">
 		var discussId = [[${discuss.id}]];
+		var staticPath = [[${staticPath}]];
 		
 		function replyDiscuss(){
 			var content = $("#content").val();
@@ -94,7 +95,7 @@
             $uploading.fadeIn(100);
 			
 			$.ajax({
-				url: "http://simplepicwx.tunnel.qydev.com/wx/replyDiscuss/receiveReply",
+				url: staticPath + "wx/replyDiscuss/receiveReply",
 				dataType:"text",
 				data:{
 					"discussId":discussId,

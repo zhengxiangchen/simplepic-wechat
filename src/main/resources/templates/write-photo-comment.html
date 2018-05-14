@@ -77,6 +77,7 @@
 	<script th:inline="javascript" type="text/javascript">
 		var pictureUploadLogsId = [[${id}]];
 		var openId = [[${openId}]];
+		var staticPath = [[${staticPath}]];
 		
 		function discuss(){
 			var content = $("#content").val();
@@ -95,7 +96,7 @@
             $uploading.fadeIn(100);
 			
 			$.ajax({
-				url: "http://simplepicwx.tunnel.qydev.com/wx/discuss/receiveDiscuss",
+				url: staticPath + "wx/discuss/receiveDiscuss",
 				dataType:"text",
 				data:{
 					"openId":openId,

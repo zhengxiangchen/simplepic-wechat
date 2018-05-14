@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,10 @@ public class DiscussController {
 	@Autowired
 	private DiscussService discussService;
 	
+	
+	@Value("${static_path}")
+	private String staticPath;
+	
 	/**
 	 * 跳转到评论页面
 	 * @return
@@ -49,6 +54,7 @@ public class DiscussController {
 		modelMap.put("date", format.format(System.currentTimeMillis()));
 		modelMap.put("id", id);
 		modelMap.put("openId", openId);
+		modelMap.put("staticPath", staticPath);
 		return "write-photo-comment";
 		
 	}
