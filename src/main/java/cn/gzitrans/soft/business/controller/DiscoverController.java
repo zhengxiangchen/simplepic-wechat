@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mxixm.fastboot.weixin.module.js.WxJsApi;
 import com.mxixm.fastboot.weixin.module.js.WxJsConfig;
 import com.mxixm.fastboot.weixin.support.WxJsTicketManager;
+import com.mxixm.fastboot.weixin.util.WxWebUtils;
+import com.mxixm.fastboot.weixin.web.WxWebUser;
 
 import cn.gzitrans.soft.business.entity.DiscoverEntity;
 import cn.gzitrans.soft.business.entity.DiscoverInfoEntity;
@@ -87,6 +89,16 @@ public class DiscoverController {
 	 */
 	@RequestMapping(value = "/getDiscoverList")
 	public String getDiscoverList(HttpServletRequest request, ModelMap modelMap){
+		WxWebUser webUser = WxWebUtils.getWxWebUserFromSession();
+		String userOpenId = webUser.getOpenId();
+		WxUserEntity userEntity = wxUserService.getByOpenId(userOpenId);
+		if(userEntity == null){
+			logger.info("未关注用户访问首页,请先关注");
+			return "redirect:https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzI3NTE3MDQzNw==&scene=123#wechat_redirect";
+		}else if(userEntity.getSubscribe() == 0){
+			logger.info("已经取消关注的用户访问首页,请先关注");
+			return "redirect:https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzI3NTE3MDQzNw==&scene=123#wechat_redirect";
+		}
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
@@ -183,6 +195,16 @@ public class DiscoverController {
 	 */
 	@RequestMapping(value = "/getDiscoverInfo", method = RequestMethod.GET)
 	public String getDiscoverInfo(HttpServletRequest request, ModelMap modelMap, @RequestParam Integer id){
+		WxWebUser webUser = WxWebUtils.getWxWebUserFromSession();
+		String userOpenId = webUser.getOpenId();
+		WxUserEntity userEntity = wxUserService.getByOpenId(userOpenId);
+		if(userEntity == null){
+			logger.info("未关注用户访问图片详情页,请先关注");
+			return "redirect:https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzI3NTE3MDQzNw==&scene=123#wechat_redirect";
+		}else if(userEntity.getSubscribe() == 0){
+			logger.info("已经取消关注的用户访问图片详情页,请先关注");
+			return "redirect:https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzI3NTE3MDQzNw==&scene=123#wechat_redirect";
+		}
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
@@ -190,6 +212,7 @@ public class DiscoverController {
 		DiscoverInfoEntity discoverInfo = new DiscoverInfoEntity();
 		discoverInfo.setId(picLogs.getId());
 		discoverInfo.setOpenId(picLogs.getOpenId());
+		discoverInfo.setPictureName(picLogs.getPictureName());
 		discoverInfo.setPictureUrl(staticPath + picLogs.getUploadPictureUrl());
 		discoverInfo.setSimplifyPictureUrl(staticPath + picLogs.getSimplifyPictureUrl());
 		discoverInfo.setUploadTime(format.format(picLogs.getUploadTime()));

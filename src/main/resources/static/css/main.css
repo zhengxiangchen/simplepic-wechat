@@ -352,11 +352,26 @@ body{
 }
 
 #login_click{ 
-	margin-top:1.2rem;
+	margin-top:0.4rem;
 	width: 7.5rem;
 	height:40px;
 	text-align: center;
 }  
+
+#login_name{
+	margin-top:0.2rem;
+	width: 100%;
+	height:0.8rem;
+	text-align: center;
+}
+
+#name-text{
+	font-size:17px;
+	width: 4.5rem;
+	height:0.8rem;
+	text-align: center;
+}
+
 #login_click a
 {  
     text-decoration:none;  

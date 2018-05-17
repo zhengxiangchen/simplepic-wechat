@@ -2,6 +2,9 @@ package cn.gzitrans.soft.business.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.mxixm.fastboot.weixin.module.js.WxJsApi;
+import com.mxixm.fastboot.weixin.module.js.WxJsConfig;
+import com.mxixm.fastboot.weixin.support.WxJsTicketManager;
 import com.mxixm.fastboot.weixin.util.WxWebUtils;
 import com.mxixm.fastboot.weixin.web.WxWebUser;
 import cn.gzitrans.soft.business.entity.DiscoverEntity;
@@ -35,6 +44,9 @@ public class MyController {
 	@Autowired
 	private UserLikePictureLogsService userLikePictureLogsService;
 	
+	@Autowired
+    private WxJsTicketManager wxJsTicketManager;
+	
 	@Value("${static_path}")
 	private String staticPath;
 	
@@ -43,11 +55,15 @@ public class MyController {
 	 * @return
 	 */
 	@RequestMapping(value = "/my")
-	public String my(ModelMap modelMap){
+	public String my(HttpServletRequest request, ModelMap modelMap){
+		
+		String url = request.getRequestURL().toString();
 		WxWebUser webUser = WxWebUtils.getWxWebUserFromSession();
 		
 		WxUserEntity user = wxUserService.getByOpenId(webUser.getOpenId());
+		WxJsConfig config =  wxJsTicketManager.getWxJsConfig(url,WxJsApi.hideAllNonBaseMenuItem);
 		
+		modelMap.put("config", config);
 		modelMap.put("user", user);
 		return "qinzi-user-center";
 	}
@@ -59,7 +75,10 @@ public class MyController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getMyHistory")
-	public String toHistory(ModelMap modelMap){
+	public String toHistory(HttpServletRequest request, ModelMap modelMap){
+		String url = request.getRequestURL().toString();
+		WxJsConfig config =  wxJsTicketManager.getWxJsConfig(url,WxJsApi.hideAllNonBaseMenuItem);
+		
 		WxWebUser webUser = WxWebUtils.getWxWebUserFromSession();
 		String openId = webUser.getOpenId();
 		
@@ -83,6 +102,7 @@ public class MyController {
 			returnList.add(discover);
 		}
 		
+		modelMap.put("config", config);
 		modelMap.put("historyList", returnList);
 		
 		return "qinzi-photo-record";
@@ -96,7 +116,10 @@ public class MyController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getMyLikeHistory", method = RequestMethod.GET)
-	public String getMyLikeHistory(ModelMap modelMap){
+	public String getMyLikeHistory(HttpServletRequest request, ModelMap modelMap){
+		String url = request.getRequestURL().toString();
+		WxJsConfig config =  wxJsTicketManager.getWxJsConfig(url,WxJsApi.hideAllNonBaseMenuItem);
+		
 		WxWebUser webUser = WxWebUtils.getWxWebUserFromSession();
 		String openId = webUser.getOpenId();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -120,9 +143,25 @@ public class MyController {
 			returnList.add(discover);
 		}
 		
+		modelMap.put("config", config);
 		modelMap.put("myLikeList", returnList);
 		
 		return "mylike-history";
+	}
+	
+	
+	
+	/**
+	 * 删除上传记录
+	 * @param request
+	 * @param pictureUploadLogsId
+	 */
+	@RequestMapping(value = "/deleteOneHistory", method = RequestMethod.GET)
+	@ResponseBody
+	public void deleteOneHistory(@RequestParam Integer pictureUploadLogsId){
+		PictureUploadLogsEntity pictureUploadLogs = pictureUploadLogsService.findOne(pictureUploadLogsId);
+		pictureUploadLogs.setIsDelete(1);
+		pictureUploadLogsService.updateIsDelete(1,pictureUploadLogsId);
 	}
 
 }

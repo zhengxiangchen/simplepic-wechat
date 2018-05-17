@@ -8,6 +8,8 @@ public class DiscoverInfoEntity {
 	
 	private String openId;//上传者openid
 	
+	private String pictureName;//用户自定义的图片名称
+	
 	private String pictureUrl;//原图地址
 	
 	private String simplifyPictureUrl;//简化图地址
@@ -40,6 +42,14 @@ public class DiscoverInfoEntity {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+
+	public String getPictureName() {
+		return pictureName;
+	}
+
+	public void setPictureName(String pictureName) {
+		this.pictureName = pictureName;
 	}
 
 	public String getPictureUrl() {

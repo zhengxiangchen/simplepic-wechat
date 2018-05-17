@@ -21,6 +21,9 @@ public class PictureUploadLogsEntity {
 	@Column(name = "openid")
 	private String openId;
 	
+	@Column(name = "picture_name")
+	private String pictureName;//用户上传图片名称
+	
 	@Column(name = "upload_picture_url")
 	private String uploadPictureUrl;//上传的原图在服务器的地址
 	
@@ -56,6 +59,14 @@ public class PictureUploadLogsEntity {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+
+	public String getPictureName() {
+		return pictureName;
+	}
+
+	public void setPictureName(String pictureName) {
+		this.pictureName = pictureName;
 	}
 
 	public String getUploadPictureUrl() {

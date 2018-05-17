@@ -78,10 +78,10 @@
 			wx.ready(function () {
 				//分享给好友
 				wx.onMenuShareAppMessage({
-					title: '好友分享', // 分享标题
-					desc: '好友分享', // 分享描述
+					title: '我是你的未来绘梦师', // 分享标题
+					desc: '图片上传,简化一切,来试试吧!', // 分享描述
 					link: staticPath + 'wx/discover/getDiscoverList', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-					imgUrl: staticPath + 'simplify993.18592806005425DXIcsUvtJONVV1pQqgksZlTIyABOtgJrZ3NWSLhxXC-CFmOadXxSTmwUVOwNYPa.jpg', // 分享图标
+					imgUrl: staticPath + 'index_share.png', // 分享图标
 					success: function () {
 					},
 					cancel: function () {
@@ -91,9 +91,9 @@
 				
 				//分享到朋友圈
 				wx.onMenuShareTimeline({
-				    title: '朋友圈分享', // 分享标题
+				    title: '我是你的未来绘梦师', // 分享标题
 				    link: staticPath + 'wx/discover/getDiscoverList', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-				    imgUrl: staticPath + 'simplify993.18592806005425DXIcsUvtJONVV1pQqgksZlTIyABOtgJrZ3NWSLhxXC-CFmOadXxSTmwUVOwNYPa.jpg', // 分享图标
+				    imgUrl: staticPath + 'index_share.png', // 分享图标
 				    success: function () {
 					},
 					cancel: function () {

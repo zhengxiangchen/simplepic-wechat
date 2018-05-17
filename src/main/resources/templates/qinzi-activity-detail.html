@@ -23,15 +23,15 @@
 <body class="bg-f6f6f6 x-hindden" style="padding-bottom:0;" >
 <div class="por x-hindden">
    <header class="image-hd por">
-       <a  href="javascript:history.back(-1)"  class="return"><img th:src="@{/images/return-fill.png}" id="back"/></a>
+       <a th:href="'javascript:back()'"  class="return"><img th:src="@{/images/return-fill.png}" id="back"/></a>
        <!-- Swiper -->
 	   <div class="swiper-container">
 	    <div class="swiper-wrapper">
 	      <div class="swiper-slide">
-	      	<img th:src="${discoverInfo.pictureUrl}" th:onclick="'javascript:previewImage(this)'"/>
+	      	<img th:src="${discoverInfo.simplifyPictureUrl}" th:onclick="'javascript:previewImage(this)'"/>
 	      </div>
 	      <div class="swiper-slide">
-	      	<img th:src="${discoverInfo.simplifyPictureUrl}" th:onclick="'javascript:previewImage(this)'"/>
+	      	<img th:src="${discoverInfo.pictureUrl}" th:onclick="'javascript:previewImage(this)'"/>
 	      </div>
 	    </div>
 	    <!-- Add Pagination -->
@@ -43,6 +43,7 @@
         <div class="fl">
             <img th:src="${discoverInfo.userHeadPicture}" class="photographer" />
             <span th:text="${discoverInfo.nickName}" class="fz-03">某某某</span>
+            <img id="deleteImg" th:src="@{/images/delete.png}" style="margin-left: 10px;" th:hidden="true" th:onclick="'javascript:showDelete()'"/>
         </div>
         <div class="clearfix discuss fr img-discuss">
         	<a th:href="@{/wx/discuss/toDiscuss(id = ${discoverInfo.id},openId = ${discoverInfo.openId})}" id="plicon" class="fr pl c-95 ">
@@ -100,6 +101,29 @@
 
 </div>
 
+<!--BEGIN dialog1-->
+<div class="js_dialog" id="iosDialog1" style="display: none;">
+    <div class="weui-mask"></div>
+    <div class="weui-dialog">
+        <div class="weui-dialog__bd">是否删除该上传记录</div>
+        <div class="weui-dialog__ft">
+            <a th:onclick="'javascript:cancelDelete()'" class="weui-dialog__btn weui-dialog__btn_default">取消</a>
+            <a th:onclick="'javascript:deleteOne()'" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
+        </div>
+    </div>
+</div>
+<!--END dialog1-->
+
+<!--BEGIN toast-->
+<div id="toast" style="display: none;">
+    <div class="weui-mask_transparent"></div>
+    <div class="weui-toast">
+        <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+        <p class="weui-toast__content">删除成功</p>
+    </div>
+</div>
+<!--end toast-->
+
 </body>
 
 	<script th:inline="javascript" type="text/javascript">
@@ -108,7 +132,16 @@
 		var openId = [[${discoverInfo.openId}]];
 		var staticPath = [[${staticPath}]];
 		
+		var simplePicUrl = [[${discoverInfo.simplifyPictureUrl}]];
+		var pictureName = [[${discoverInfo.pictureName}]];
+		var nickName = [[${discoverInfo.nickName}]];
+		
 		$(document).ready(function(){
+			var text = document.referrer;
+			//如果是从'我的上传记录'跳转过来的
+			if(text.indexOf("getMyHistory") != -1){
+				$('#deleteImg').show();
+			}
 			
 			var swiper = new Swiper('.swiper-container', {
 			      pagination: {
@@ -151,10 +184,10 @@
 			wx.ready(function () {
 				//分享给好友
 				wx.onMenuShareAppMessage({
-					title: '好友分享', // 分享标题
-					desc: '好友分享', // 分享描述
+					title: pictureName, // 分享标题
+					desc: '来自 ' + nickName + '好友的图片分享,一起来看看吧!', // 分享描述
 					link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-					imgUrl: staticPath + 'simplify993.18592806005425DXIcsUvtJONVV1pQqgksZlTIyABOtgJrZ3NWSLhxXC-CFmOadXxSTmwUVOwNYPa.jpg', // 分享图标
+					imgUrl: simplePicUrl, // 分享图标
 					success: function () {
 						$.ajax({
 							url: staticPath + "wx/discover/share",
@@ -174,9 +207,9 @@
 				
 				//分享到朋友圈
 				wx.onMenuShareTimeline({
-				    title: '朋友圈', // 分享标题
+				    title: pictureName, // 分享标题
 				    link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-				    imgUrl: staticPath + 'simplify993.18592806005425DXIcsUvtJONVV1pQqgksZlTIyABOtgJrZ3NWSLhxXC-CFmOadXxSTmwUVOwNYPa.jpg', // 分享图标
+				    imgUrl: simplePicUrl, // 分享图标
 				    success: function () {
 				    	$.ajax({
 							url: staticPath + "wx/discover/share",
@@ -230,6 +263,51 @@
 			});
 		}
 		
+		
+		//回退按钮
+		function back(){
+			var length = history.length;
+			if(length == 1){
+				window.location.href = staticPath + "/wx/discover/getDiscoverList";
+			}else{
+				history.back();
+			}
+		}
+		
+		//弹出删除确认框
+		function showDelete(){
+			var $iosDialog1 = $('#iosDialog1');
+			$iosDialog1.fadeIn(100);
+		}
+		
+		
+		//点击删除取消按钮
+		function cancelDelete(){
+			var $iosDialog1 = $('#iosDialog1');
+			$iosDialog1.fadeOut(100);
+		}
+		
+		
+		//点击删除确认按钮
+		function deleteOne(){
+			var $iosDialog1 = $('#iosDialog1');
+			var $toast = $('#toast');
+			$.ajax({
+				url: staticPath + "wx/my/deleteOneHistory",
+				dataType:"text",
+				data:{
+					"pictureUploadLogsId":pictureUploadLogsId
+				},
+				success: function(result){
+					$iosDialog1.fadeOut(100);
+					$toast.fadeIn(100);
+		            setTimeout(function () {
+		                $toast.fadeOut(100);
+		                history.back();
+		            }, 2000);
+		      	}
+			});
+		}
 	</script>
 </html>
 

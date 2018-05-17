@@ -53,7 +53,6 @@ public class DiscussController {
 		modelMap.put("user", user);
 		modelMap.put("date", format.format(System.currentTimeMillis()));
 		modelMap.put("id", id);
-		modelMap.put("openId", openId);
 		modelMap.put("staticPath", staticPath);
 		return "write-photo-comment";
 		

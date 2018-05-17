@@ -29,6 +29,9 @@
 			<img src="/images/click-add.png" alt="" class="add-photo-btn" id="add-photo"/>
 		</a>
 		<p class="fz-03 c-666 txt-center" id="txt-center">点击图标添加照片</p>
+		<div id="login_name" hidden="true">
+			<input id="name-text" type="text" placeholder="为爱图取个名字"/>
+        </div>
 		<div id="login_click" hidden="true">
         	<a id="btlogin" th:onclick="'javascript:uploadImg()'">简化图片</a>
         </div>
@@ -61,6 +64,21 @@
         </div>
     </div>
     <!-- loading toast -->
+    
+    
+    <!--BEGIN dialog2-->
+    <div id="dialogs">
+	    <div class="js_dialog" id="iosDialog2" style="display: none;">
+	        <div class="weui-mask"></div>
+	        <div class="weui-dialog">
+	            <div class="weui-dialog__bd">请填写上传图片名称!</div>
+	            <div class="weui-dialog__ft">
+	                <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+    <!--END dialog2-->
         <script th:src="@{/js/jquery-1.11.1.min.js}" type="text/javascript"></script>
         
         <script th:inline="javascript" type="text/javascript">
@@ -84,6 +102,7 @@
 				    jsApiList:jsApiList
 				});
 				wx.ready(function () {
+					wx.hideAllNonBaseMenuItem();
 				});
 				
 			});
@@ -100,12 +119,25 @@
 						$("#add-photo").css("height","7.2rem");
 						$("#add-photo").css("margin-top","1.2rem");
 						$("#txt-center").hide();
+						$("#login_name").show();
 						$("#login_click").show();
 					}
 				});
 			}
 			
 			function uploadImg(){
+				var imgName = $("#name-text").val();
+				
+				if(imgName.trim().length == 0){
+					$('#dialogs').on('click', '.weui-dialog__btn', function(){
+			            $(this).parents('.js_dialog').fadeOut(200);
+			            $("#name-text").focus();
+			        });
+					var $iosDialog2 = $('#iosDialog2');
+			        $iosDialog2.fadeIn(200);
+			       	return;
+				}
+				
 				var $loadingToast = $('#loadingToast');
 	            if ($loadingToast.css('display') != 'none') return;
 	            $loadingToast.fadeIn(100);
@@ -116,10 +148,12 @@
 					success: function (res) {
 						img_serverId = res.serverId; // 返回图片的服务器端ID
 						$.ajax({
-							url: staticPath + "/wx/photo/downloadPicture",
+							//url: "http://simplepicwxtest.tunnel.qydev.com/wx/photo/downloadPicture",
+							url: "http://simplepicwx.tunnel.qydev.com/wx/photo/downloadPicture",
 							dataType:"text",
 							data:{
-								"img_serverId":img_serverId
+								"img_serverId":img_serverId,
+								"imgName":imgName
 							},
 							success: function(result){
 								$loadingToast.fadeOut(100);
@@ -136,6 +170,7 @@
 					}
 				});
 			}
+			
 		</script>
 		
 	</body>
