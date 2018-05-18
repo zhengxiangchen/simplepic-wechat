@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -86,6 +87,7 @@ public class PhotoController {
 	@RequestMapping(value = "/downloadPicture")
 	@ResponseBody
 	public String downloadPicture(@RequestParam String img_serverId, @RequestParam String imgName){
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		WxWebUser user = WxWebUtils.getWxWebUserFromSession();
 		PictureUploadLogsEntity picUploadLog = new PictureUploadLogsEntity();
 		picUploadLog.setOpenId(user.getOpenId());
@@ -101,19 +103,23 @@ public class PhotoController {
 		String fileName = file.getName();
 		
 		
+		logger.info("公众号openid = " + WxWebUtils.getWxWebUserFromSession().getOpenId() + " ,的用户上传了一张图片.");
+        logger.info("图片上传时间 = " + format.format(System.currentTimeMillis()));
+        logger.info("图片名称 = " + fileName);
 		//调用接口简化图片
         //模拟接收到的简化图片为原图
         //保存简化后的图片到服务器本地
-        String simplifyFileName = "simplify" + Math.random()*1000 + fileName;
+		
+        /*String simplifyFileName = "simplify" + Math.random()*1000 + fileName;
         
         try {
 			Thumbnails.of(filePath + fileName) .scale(1f) .outputQuality(0.1f) .toFile(filePath + simplifyFileName);
 		} catch (IOException e) {
 			logger.error(e.getMessage());
-		}
+		}*/
 		
 		
-		/*String picture64 = imageToBase64(filePath + fileName);
+		String picture64 = imageToBase64(filePath + fileName);
 		String url = "http://127.0.0.1:8082/api_v1/lab/picture/receive";
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("picture64", picture64);
@@ -123,7 +129,7 @@ public class PhotoController {
         if(simplifyFileName == null || simplifyFileName.length() <= 0){
         	logger.error("图片简化操作失败,base64转图片后返回为null");
         	return "error";
-        }*/
+        }
         
         
         //调用google接口压缩图片
