@@ -148,8 +148,8 @@
 					success: function (res) {
 						img_serverId = res.serverId; // 返回图片的服务器端ID
 						$.ajax({
-							//url: "http://simplepicwxtest.tunnel.qydev.com/wx/photo/downloadPicture",
-							url: "http://simplepicwx.tunnel.qydev.com/wx/photo/downloadPicture",
+							url: "http://simplepicwxtest.tunnel.qydev.com/wx/photo/downloadPicture",
+							//url: "http://simplepicwx.tunnel.qydev.com/wx/photo/downloadPicture",
 							dataType:"text",
 							data:{
 								"img_serverId":img_serverId,

@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mxixm.fastboot.weixin.module.credential.WxJsTicketManager;
 import com.mxixm.fastboot.weixin.module.js.WxJsApi;
 import com.mxixm.fastboot.weixin.module.js.WxJsConfig;
-import com.mxixm.fastboot.weixin.support.WxJsTicketManager;
 import com.mxixm.fastboot.weixin.util.WxWebUtils;
 import com.mxixm.fastboot.weixin.web.WxWebUser;
 import cn.gzitrans.soft.business.entity.DiscoverEntity;

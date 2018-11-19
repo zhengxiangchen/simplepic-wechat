@@ -111,10 +111,16 @@ public class WeixinController {
 	/**
      * 定义微信菜单
      */
-    @WxButton(type = WxButton.Type.CLICK, group = WxButton.Group.LEFT, main = true, name = "简图-小程序")
-    public String left(WxRequest wxRequest, WxUser wxUser) {
+    @WxButton(type = WxButton.Type.MINI_PROGRAM, 
+    		group = WxButton.Group.LEFT, 
+    		main = true, 
+    		name = "简图-小程序", 
+    		appId = "wx0842e27bf63e20e8",
+    		url = "http://simplepicwx.tunnel.qydev.com/wx/discover/getDiscoverList",
+    		pagePath = "/pages/welcome/welcome"
+    		)
+    public void left(WxRequest wxRequest, WxUser wxUser) {
     	logger.info(wxUser.getNickName() + "点击了'小程序'按钮");
-    	return "点击打开小程序";
     }
 
     /**

@@ -24,8 +24,8 @@ $(function(){
             			 type: "GET",
 		           		 dataType:"json",
 					     data:{itemsLength:itemsLength},
-					     //url:'http://simplepicwxtest.tunnel.qydev.com/wx/discover/getMoreDiscover',
-					     url:'http://simplepicwx.tunnel.qydev.com/wx/discover/getMoreDiscover',
+					     url:'http://simplepicwxtest.tunnel.qydev.com/wx/discover/getMoreDiscover',
+					     //url:'http://simplepicwx.tunnel.qydev.com/wx/discover/getMoreDiscover',
 			             success:function(result){
 			            	if(result.length <= 0){
 			            		//展示我是有底线的
